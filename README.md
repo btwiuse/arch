@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/archlinux/archlinux-docker.svg?branch=master)](https://travis-ci.org/archlinux/archlinux-docker)
 [![DockerHub](https://img.shields.io/docker/pulls/btwiuse/arch.svg)](https://hub.docker.com/r/btwiuse/arch)
-[![License](https://img.shields.io/github/license/btwiuse/arch?color=%23000&style=flat-round)](https://github.com/btwiuse/arch/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/btwiuse/arch?color=%23000&style=flat-round)](https://github.com/btwiuse/arch/blob/main/LICENSE)
 
 ## Goals
 
@@ -11,7 +11,7 @@
 * Additional package repos:
   - archlinuxcn
   - blackarch
-  - btwiuse (for personal use)
+  - [btwiuse](https://github.com/btwiuse/archpkg) (for personal use)
   - aur (manually install `yay` or `yaourt` first)
 
 ## Usage
@@ -41,3 +41,5 @@ If you don't see a command prompt, try pressing enter.
 ### GitHub Codespaces
 
 On https://github.com/codespaces/new, open repo `btwiuse/arch`, then click "Create codespace"
+
+![image](https://user-images.githubusercontent.com/54848194/177681631-077891d8-670a-4a34-9f6e-1c69b9fc5916.png)
