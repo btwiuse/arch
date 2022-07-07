@@ -1,4 +1,4 @@
-# Docker Base Image for Arch Linux
+# BTW I USE ARCH, in Docker
 
 [![Build Status](https://travis-ci.org/archlinux/archlinux-docker.svg?branch=master)](https://travis-ci.org/archlinux/archlinux-docker)
 [![DockerHub](https://img.shields.io/docker/pulls/btwiuse/arch.svg)](https://hub.docker.com/r/btwiuse/arch)
