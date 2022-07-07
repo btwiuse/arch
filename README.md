@@ -23,10 +23,11 @@ $ docker run -it btwiuse/arch
 $ pacman -Syu yay
 ```
 
+[Example Dockerfile](.devcontainer/Dockerfile)
 ```
 FROM btwiuse/arch
 
-RUN pacman -Syu yay
+RUN pacman -Syu --noconfirm yay
 ```
 
 ### Kubernetes

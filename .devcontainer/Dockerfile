@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker
+RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch
