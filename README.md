@@ -27,7 +27,7 @@ $ pacman -Syu yay
 ```
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm yay
+RUN pacman -Syu --noconfirm neofetch
 ```
 
 ### Kubernetes
@@ -35,7 +35,7 @@ RUN pacman -Syu --noconfirm yay
 ```
 $ kubectl run -it arch --image=btwiuse/arch
 If you don't see a command prompt, try pressing enter.
-[root@arch /]# pacman -Syu yay
+[root@arch /]# pacman -Syu neofetch
 ```
 
 ### GitHub Codespaces
