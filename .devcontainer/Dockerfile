@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu docker
+RUN pacman -Syu --noconfirm docker
