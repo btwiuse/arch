@@ -1,3 +1,3 @@
-FROM btwiuse/arch
+FROM btwiuse/arch:golang
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch
+RUN CGO_ENABLED=0 GOBIN=/usr/local/bin go install github.com/btwiuse/dkg@latest
