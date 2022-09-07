@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker go
+RUN pacman -Syu --noconfirm --overwrite='*' docker go clang
