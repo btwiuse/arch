@@ -6,11 +6,15 @@ RUN env CARGO_INSTALL_ROOT=/usr/local cargo install --git https://github.com/pro
 
 RUN env CARGO_INSTALL_ROOT=/usr/local cargo install sugar-cli
 
+RUN env CARGO_INSTALL_ROOT=/usr/local cargo install metaboss
+
 FROM btwiuse/arch
 
 COPY --from=rustup /usr/local/bin/anchor /usr/local/bin/anchor
 
 COPY --from=rustup /usr/local/bin/sugar /usr/local/bin/sugar
+
+COPY --from=rustup /usr/local/bin/sugar /usr/local/bin/metaboss
 
 RUN curl -sSfL https://release.solana.com/v1.11.10/install | bash -v
 
