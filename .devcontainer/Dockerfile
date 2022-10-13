@@ -1,3 +1,5 @@
-FROM btwiuse/arch
+FROM btwiuse/arch:rust
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch rustup clang cmake
+RUN cargo install --root /usr/local cargo-generate --features vendored-openssl
+RUN cargo install --root /usr/local cargo-run-script
+RUN cargo install --root /usr/local cosmwasm-check
