@@ -1,3 +1,3 @@
-FROM btwiuse/arch
+FROM btwiuse/arch:rustup
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch rustup clang cmake
+RUN rustup default nightly
