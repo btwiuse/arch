@@ -1,3 +1,3 @@
-FROM btwiuse/arch
+FROM btwiuse/arch:rust
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch rustup clang cmake
+RUN cargo install --root /usr/local cargo-near
