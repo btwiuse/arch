@@ -1,3 +1,5 @@
-FROM btwiuse/arch
+FROM btwiuse/arch:rust-nightly AS builder
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch
+RUN git clone https://github.com/gear-tech/gear /gear
+
+WORKDIR /gear
