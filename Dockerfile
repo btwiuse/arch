@@ -7,6 +7,12 @@ RUN pacman -Syu --noconfirm --needed --overwrite='*' yaourt
 ENV GOBIN /usr/local/bin
 ENV CARGO_INSTALL_ROOT /usr/local
 
+RUN sudo pacman -Syu --noconfirm --needed --overwrite='*' go-tools
+
+# pkgfile
+RUN sudo pacman -Syu --noconfirm --needed --overwrite='*' pkgfile
+RUN pkgfile -u
+
 USER btwiuse
 
 # xpanes
