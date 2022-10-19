@@ -17,7 +17,7 @@ RUN pacman -Syu --noconfirm --overwrite='*' rustup clang cmake
 RUN rustup default stable
 
 # node
-RUN pacman -Syu --noconfirm --overwrite='*' nodejs yarn npm
+RUN pacman -Syu --noconfirm --overwrite='*' yarn npm nodejs-lts-gallium
 
 # htop dstat
 RUN pacman -Syu --noconfirm --overwrite='*' htop dstat
