@@ -1,7 +1,5 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker unzip
+RUN pacman -Syu --noconfirm --overwrite='*' docker unzip yay aria2
 
-RUN curl -sL https://bun.sh/install | bash
-
-RUN cp /root/.bun/bin/bun /usr/local/bin/
+RUN su btwiuse -c "yay -S --noconfirm bun-bin"
