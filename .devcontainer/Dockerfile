@@ -1,3 +1,5 @@
-FROM btwiuse/arch
+FROM btwiuse/arch:vscode-src
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch
+RUN yarn gulp vscode-reh-web-linux-arm64-ci
+
+CMD ufo term
