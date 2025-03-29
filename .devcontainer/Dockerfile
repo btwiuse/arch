@@ -1,3 +1,5 @@
-FROM btwiuse/arch:node
+FROM btwiuse/arch:bun
 
-RUN npm i -g deno bun
+ADD setup-eliza /setup-eliza
+
+RUN bash /setup-eliza
