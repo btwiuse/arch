@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+cd
+git clone https://github.com/btwiuse/eliza -b v2-develop --depth 1
+
+cd eliza
+bun i
+bun run build
+
+cd packages/cli
+npm link
+
+elizaos --version
