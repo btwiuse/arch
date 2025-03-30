@@ -1,4 +1,4 @@
-FROM btwiuse/arch:bun
+FROM btwiuse/arch:dev
 
 ADD setup-eliza /setup-eliza
 
