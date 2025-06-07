@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-git clone https://github.com/elizaOS/eliza -b v2-develop --depth 1
+git clone https://github.com/elizaOS/eliza -b develop --depth 1
 
 cd eliza
 bun i
