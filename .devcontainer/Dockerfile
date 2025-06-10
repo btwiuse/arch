@@ -6,5 +6,5 @@ RUN npm install --force -g sails-js
 
 RUN cargo install --root /usr/local cargo-generate cargo-gbuild cargo-expand sails-cli
 
-RUN curl -#L https://gear-builds.s3.amazonaws.com/gear-v1.7.1-x86_64-unknown-linux-gnu.tar.xz | tar -xJC /usr/bin
+RUN curl -#L https://gear-builds.s3.amazonaws.com/gear-v1.8.1-x86_64-unknown-linux-gnu.tar.xz | tar -xJC /usr/bin
 
