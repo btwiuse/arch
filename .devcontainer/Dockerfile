@@ -12,7 +12,7 @@ RUN curl -sL https://github.com/btwiuse/ninja/releases/download/cargo-bin/cargo-
 COPY --from=cosmwasm-optimizer /usr/local/bin/bob /usr/local/bin
 COPY --from=cosmwasm-optimizer /usr/local/bin/wasm-opt /usr/local/bin
 COPY --from=cosmwasm-optimizer /usr/local/bin/optimize.sh /usr/local/bin/cosmwasm-optimizer
-RUN sed -i -e 's,PROJECTDIR="$1",PROJECTDIR="${1:-.}",g' -e 's,exit 1,,g' -e s,/target,./target,g -e s,/bin/ash,/bin/bash,g /usr/local/bin/cosmwasm-optimizer
+RUN sed -i -e 's,/usr/local/bin/bob,cargo wasm,g' -e 's,PROJECTDIR="$1",PROJECTDIR="${1:-.}",g' -e 's,exit 1,,g' -e s,/target,./target,g -e s,/bin/ash,/bin/bash,g /usr/local/bin/cosmwasm-optimizer
 
 COPY --from=injectived /usr/local/bin/* /usr/local/bin/
 COPY --from=injectived /lib/libwasmvm.* /lib/
