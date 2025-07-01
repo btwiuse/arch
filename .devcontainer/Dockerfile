@@ -4,7 +4,7 @@ FROM injectivelabs/injective-core:v1.16.0-beta.3 AS injectived
 
 FROM btwiuse/arch:rust
 
-RUN pacman -Sy --noconfirm nodejs yarn npm
+RUN pacman -Sy --noconfirm nodejs yarn npm unzip
 RUN npm i -g bun
 
 RUN curl -sL https://github.com/btwiuse/ninja/releases/download/cargo-bin/cargo-bin.tgz | tar --strip=1 -xvzC /usr/local
