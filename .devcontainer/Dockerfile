@@ -2,4 +2,6 @@ FROM btwiuse/arch
 
 RUN pacman -Sy --noconfirm expect
 
-COPY --chmod=0755 ./activate ./keygen /usr/bin/
+COPY . /app
+
+COPY --chmod=0755 /app/activate /app/keygen /usr/bin/
