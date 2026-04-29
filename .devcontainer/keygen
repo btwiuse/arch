@@ -1,0 +1,348 @@
+#!/bin/bash
+# Mathematica Keygen – pure Bash port of main.go
+# Uses awk for math-heavy computation (standard POSIX tool).
+#
+# Constants (for reference):
+#   hashCode1   = 33505  (0b1000001011100001 / 0x82E1)
+#   hashCode2   = 33573  (0b1000001100100101 / 0x8325)
+#   magicNumber = 59222
+
+# ---------------------------------------------------------------------------
+# checkFormat <format> <str>
+#   'x' = ASCII digit
+#   'a' = uppercase ASCII letter (A-Z)
+#   'b' = digit or uppercase letter
+#   any other character must match literally
+# Returns 0 on match, 1 on mismatch.
+# ---------------------------------------------------------------------------
+checkFormat() {
+    local format="$1" str="$2"
+    local flen=${#format} slen=${#str}
+    [[ $flen -ne $slen ]] && return 1
+    local i fc sc
+    for ((i = 0; i < flen; i++)); do
+        fc="${format:i:1}"
+        sc="${str:i:1}"
+        case "$fc" in
+            x) [[ "$sc" =~ ^[0-9]$ ]]   || return 1 ;;
+            a) [[ "$sc" =~ ^[A-Z]$ ]]   || return 1 ;;
+            b) [[ "$sc" =~ ^[0-9A-Z]$ ]] || return 1 ;;
+            *) [[ "$fc" == "$sc" ]]      || return 1 ;;
+        esac
+    done
+    return 0
+}
+
+# ---------------------------------------------------------------------------
+# randomActivationKey <format>
+# Outputs a random key matching the given format string.
+# ---------------------------------------------------------------------------
+randomActivationKey() {
+    local format="$1" result="" i fc
+    local _alpha="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for ((i = 0; i < ${#format}; i++)); do
+        fc="${format:i:1}"
+        case "$fc" in
+            x) result+=$((RANDOM % 10)) ;;
+            a) result+="${_alpha:$((RANDOM % 26)):1}" ;;
+            *) result+="$fc" ;;
+        esac
+    done
+    printf '%s\n' "$result"
+}
+
+# ---------------------------------------------------------------------------
+# parseVersion <version_string>
+# Outputs "major minor patch" space-separated (e.g. "14 1 0").
+# ---------------------------------------------------------------------------
+parseVersion() {
+    local IFS='.'
+    read -ra _parts <<< "$1"
+    printf '%d %d %d\n' "${_parts[0]:-0}" "${_parts[1]:-0}" "${_parts[2]:-0}"
+}
+
+# ---------------------------------------------------------------------------
+# versionAtLeast <version_str> <major> <minor> <patch>
+# Returns 0 if version >= major.minor.patch, 1 otherwise.
+# ---------------------------------------------------------------------------
+versionAtLeast() {
+    local -a v
+    read -ra v <<< "$(parseVersion "$1")"
+    local major=$2 minor=$3 patch=$4
+    (( v[0] > major )) && return 0
+    (( v[0] == major && v[1] > minor )) && return 0
+    (( v[0] == major && v[1] == minor && v[2] >= patch )) && return 0
+    return 1
+}
+
+# ---------------------------------------------------------------------------
+# activationKeyFormat <version_str>
+# Outputs the activation key format string for the given version.
+# ---------------------------------------------------------------------------
+activationKeyFormat() {
+    if versionAtLeast "$1" 14 1 0; then
+        printf 'xxxx-xxxx-aaaaaa\n'
+    else
+        printf 'xxxx-xxxx-xxxxxx\n'
+    fi
+}
+
+# ---------------------------------------------------------------------------
+# dateAfter <days>
+# Outputs the date <days> days from today in YYYYMMDD format.
+# Tries GNU date first; falls back to python3.
+# ---------------------------------------------------------------------------
+dateAfter() {
+    date -d "+$1 days" "+%Y%m%d" 2>/dev/null || \
+        python3 -c "from datetime import date,timedelta; \
+print((date.today()+timedelta(days=$1)).strftime('%Y%m%d'))"
+}
+
+# ---------------------------------------------------------------------------
+# trim <string>
+# Outputs string with leading/trailing whitespace removed.
+# ---------------------------------------------------------------------------
+trim() {
+    local s="$1"
+    s="${s#"${s%%[![:space:]]*}"}"
+    s="${s%"${s##*[![:space:]]}"}"
+    printf '%s' "$s"
+}
+
+# ---------------------------------------------------------------------------
+# generatePasswordV14_1_0 <mathID> <activationKey> <mathNum> <expireDate>
+# Outputs the password string.  All heavy arithmetic is done in awk.
+#
+# Algorithm (mirrors generatePasswordV14_1_0 in main.go):
+#   strVal = mathID "@" expireDate "$" mathNum "&" activationKey
+#   chars  = reverseString(strVal)          # byte values, reversed
+#   n0     = encodingCharacters(hashCode1, magicNumber, chars)
+#   n1     = (n0 + 0x72FA) % 65536
+#   hc     = encodingHash(n1)
+#   n2     = encodingCharacters(hashCode2, hc, chars)
+#   password = constructPassword(n1, n2) "::" mathNum ":" expireDate
+# ---------------------------------------------------------------------------
+generatePasswordV14_1_0() {
+    local mathID="$1" activationKey="$2" mathNum="$3" expireDate="$4"
+
+    awk \
+        -v mathID="$mathID" \
+        -v activationKey="$activationKey" \
+        -v mathNum="$mathNum" \
+        -v expireDate="$expireDate" \
+    '
+    # ------------------------------------------------------------------
+    # xor16(a, b) – bitwise XOR for 16-bit non-negative integers.
+    # Standard awk has no bitwise operators, so we simulate with arithmetic.
+    # ------------------------------------------------------------------
+    function xor16(a, b,    r, i) {
+        r = 0
+        for (i = 1; i <= 32768; i *= 2) {
+            if ((int(a / i) % 2) != (int(b / i) % 2))
+                r += i
+        }
+        return r
+    }
+
+    # ------------------------------------------------------------------
+    # hasher(hasherCode, hashVal, byteVal) – CRC-like hash step.
+    # Processes one byte (8 bits) through the hash.
+    # ------------------------------------------------------------------
+    function hasher(hasherCode, hashVal, byteVal,    i, bit, hmod) {
+        for (i = 0; i < 8; i++) {
+            bit  = byteVal % 2
+            hmod = hashVal % 2
+            if (hmod == bit) {
+                hashVal = int(hashVal / 2)
+            } else {
+                hashVal = int(hashVal / 2)
+                hashVal = xor16(hashVal, hasherCode)
+            }
+            byteVal = int(byteVal / 2)
+        }
+        return hashVal
+    }
+
+    # ------------------------------------------------------------------
+    # splitHex(hexVal, d) – maps a 16-bit value to 5 decimal digits.
+    # Stores digits least-significant first: d[0]=ones, d[4]=ten-thousands.
+    # ------------------------------------------------------------------
+    function splitHex(hexVal, d,    n, i) {
+        n = int(hexVal * 99999.0 / 65535)
+        for (i = 0; i < 5; i++) {
+            d[i] = n % 10
+            n    = int(n / 10)
+        }
+    }
+
+    # ------------------------------------------------------------------
+    # encodingHash(n1) – secondary hash value derived from n1.
+    # ------------------------------------------------------------------
+    function encodingHash(n1,    n, n01, n2loc, temp) {
+        n     = int(n1 * 99999.0 / 65535)
+        n01   = n % 100
+        n    -= n01
+        n2loc = n % 1000
+        n    -= n2loc
+        n    += n01 * 10 + int(n2loc / 100)
+        # ceil(n * 65535.0 / 99999) via integer arithmetic
+        temp  = int((n * 65535 + 99998) / 99999)
+        return hasher(HC2, hasher(HC2, 0, temp % 256), int(temp / 256))
+    }
+
+    # ------------------------------------------------------------------
+    # encodingCharacters(hCode, hashVal, chars, nchars)
+    # Hashes all chars, then searches c1/c2 in [0,255] so that the two
+    # extra bytes produce 0xA5B6 (42422).  Returns c1 | (c2 << 8).
+    # ------------------------------------------------------------------
+    function encodingCharacters(hCode, hashVal, chars, nchars,    i, c1, c2, h1) {
+        for (i = 0; i < nchars; i++)
+            hashVal = hasher(hCode, hashVal, chars[i])
+        for (c1 = 0; c1 < 256; c1++) {
+            h1 = hasher(hCode, hashVal, c1)
+            for (c2 = 0; c2 < 256; c2++) {
+                if (hasher(hCode, h1, c2) == 42422)   # 0xA5B6
+                    return c1 + c2 * 256
+            }
+        }
+        # Fallback: c1=256, c2=256 after both loops exhaust without a match.
+        # This mirrors the identical fallback in the Go source (return c1 | (c2 << 8)).
+        return c1 + c2 * 256
+    }
+
+    # ------------------------------------------------------------------
+    # constructPassword(n1, n2)
+    # Assembles the printable password from the two 16-bit values.
+    #
+    # splitHex stores digits LSB-first (index 0 = ones place).
+    # Password layout (Go indices):
+    #   b[1] a[1] a[3] a[4] - b[0] a[2] b[4] - b[2] a[0] b[3]
+    # ------------------------------------------------------------------
+    function constructPassword(n1, n2,    a, b) {
+        delete a; delete b
+        splitHex(n1, a)
+        splitHex(n2, b)
+        return sprintf("%d%d%d%d-%d%d%d-%d%d%d",
+            b[1], a[1], a[3], a[4],
+            b[0], a[2], b[4],
+            b[2], a[0], b[3])
+    }
+
+    BEGIN {
+        HC1   = 33505   # hashCode1   = 0x82E1
+        HC2   = 33573   # hashCode2   = 0x8325
+        MAGIC = 59222   # magicNumber
+
+        # Build ord lookup table for printable ASCII (32-126).
+        for (i = 32; i <= 126; i++)
+            ord[sprintf("%c", i)] = i
+
+        # strVal = mathID "@" expireDate "$" mathNum "&" activationKey
+        strVal = mathID "@" expireDate "$" mathNum "&" activationKey
+
+        # reverseString: byte values of strVal in reverse order.
+        nchars = length(strVal)
+        for (i = 0; i < nchars; i++)
+            chars[i] = ord[substr(strVal, nchars - i, 1)]
+
+        hc  = MAGIC
+        n0  = encodingCharacters(HC1, hc, chars, nchars)
+        n1  = (n0 + 29434) % 65536      # 0x72FA = 29434
+        hc  = encodingHash(n1)
+        n2  = encodingCharacters(HC2, hc, chars, nchars)
+
+        print constructPassword(n1, n2) "::" mathNum ":" expireDate
+    }
+    '
+}
+
+# ===========================================================================
+# main
+# ===========================================================================
+
+usage() {
+    printf 'Usage: %s [mathid [activation_key]]\n\n' "$0" >&2
+    printf '  mathid         Math ID in the format xxxx-xxxxx-xxxxx\n' >&2
+    printf '  activation_key Activation key in the format xxxx-xxxx-aaaaaa (optional)\n' >&2
+    printf '\nIf arguments are omitted, the program runs in interactive mode.\n' >&2
+}
+
+version="14.1.0"
+mathID=""
+customKey=""
+expireDate=""
+
+# Parse flags – mirrors Go's flag.Parse() behaviour:
+#   -h / -help / --help  → print usage and exit 0
+#   --                   → end of flags
+#   any other -flag      → error + usage + exit 2
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|-help|--help)
+            usage
+            exit 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        -*)
+            printf '%s: flag provided but not defined: %s\n' "$0" "$1" >&2
+            usage
+            exit 2
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+case $# in
+    0)
+        # Interactive mode – mirrors the bufio.NewReader branch in main.go.
+        printf 'Math ID (xxxx-xxxxx-xxxxx): '
+        read -r mathID
+        mathID="$(trim "$mathID")"
+
+        printf 'Activation Key (leave blank to generate one, format xxxx-xxxx-aaaaaa): '
+        read -r customKey
+        customKey="$(trim "$customKey")"
+
+        printf 'Expiry Date (YYYYMMDD, default 999 days from now): '
+        read -r expireDate
+        expireDate="$(trim "$expireDate")"
+        ;;
+    1)
+        mathID="$1"
+        ;;
+    *)
+        mathID="$1"
+        customKey="$2"
+        ;;
+esac
+
+# setMathID: clear mathID if it does not match the expected format
+# (mirrors MathPass.setMathID returning false and leaving mp.mathID as "").
+if ! checkFormat "xxxx-xxxxx-xxxxx" "$mathID"; then
+    mathID=""
+fi
+
+# Determine activation key format for version 14.1.0.
+keyFmt="$(activationKeyFormat "$version")"
+
+# Use the provided key if it matches the format; otherwise generate a random one.
+if [[ -n "$customKey" ]] && checkFormat "$keyFmt" "$customKey"; then
+    activationKey="$customKey"
+else
+    activationKey="$(randomActivationKey "$keyFmt")"
+fi
+
+# GeneratePassword defaults: mathNum="800001", expireDate=999 days from now.
+mathNum="800001"
+[[ -z "$expireDate" ]] && expireDate="$(dateAfter 999)"
+
+# Generate password (version >= 14.1.0 path).
+password="$(generatePasswordV14_1_0 "$mathID" "$activationKey" "$mathNum" "$expireDate")"
+
+printf 'Activation Key: %s\n' "$activationKey"
+printf 'Password: %s\n' "$password"
