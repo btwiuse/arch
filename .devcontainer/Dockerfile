@@ -1,3 +1,5 @@
-FROM btwiuse/arch
+FROM btwiuse/arch:yay
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker
+RUN runuser -u btwiuse -- bash -lc '\
+    yay -Syu --noconfirm curl-http3 && \
+    yay -Sc --noconfirm'
