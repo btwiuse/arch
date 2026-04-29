@@ -1,7 +1,5 @@
-FROM btwiuse/arch
-
-RUN pacman -Syu --noconfirm --overwrite='*' docker yay aria2 expect && pacman -Scc --noconfirm
+FROM btwiuse/arch:mathematica-keygen
 
 RUN runuser -u btwiuse -- bash -lc '\
-    yay -S --noconfirm mathematica-light && \
+    yay -Syu --noconfirm mathematica-light && \
     yay -Sc --noconfirm'
