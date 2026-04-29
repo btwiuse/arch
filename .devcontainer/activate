@@ -1,0 +1,14 @@
+#!/usr/bin/expect
+spawn wolfram
+send "\n"
+expect -re "MathID:\t(.{16})"
+set mathid "$expect_out(1,string)"
+set keygen_output [exec keygen $mathid]
+regexp {Activation Key:\s*([A-Z0-9\-]+)} $keygen_output -> activation_key
+regexp {Password:\s*([0-9\-:]+)} $keygen_output -> password
+expect "Enter your Activation key"
+send "$activation_key\n"
+expect "Enter your password:"
+send "$password\n"
+expect "Creating password file entry in:"
+exit
