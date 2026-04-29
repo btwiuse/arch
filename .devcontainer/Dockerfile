@@ -1,15 +1,7 @@
-FROM btwiuse/ufo AS ufo
-
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker yay aria2
+RUN pacman -Syu --noconfirm --overwrite='*' docker yay aria2 expect && pacman -Scc --noconfirm
 
-USER btwiuse
-
-RUN yay -S --noconfirm mathematica
-
-USER root
-
-COPY --from=ufo /usr/bin/ufo /usr/bin/
-
-CMD ufo term
+RUN runuser -u btwiuse -- bash -lc '\
+    yay -S --noconfirm mathematica && \
+    yay -Sc --noconfirm'
