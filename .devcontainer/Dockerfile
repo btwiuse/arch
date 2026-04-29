@@ -1,7 +1,9 @@
-FROM goreleaser/goreleaser AS goreleaser
+FROM btwiuse/arch:golang
 
-FROM btwiuse/arch
+RUN pacman -Sy --noconfirm expect
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker go clang tinygo
+ADD . /app
 
-COPY --from=goreleaser /usr/bin/goreleaser /usr/bin/goreleaser
+RUN cp /app/activate /usr/bin/ && chmod +x /usr/bin/activate
+
+RUN go build -o /usr/bin/keygen /app/keygen.go
