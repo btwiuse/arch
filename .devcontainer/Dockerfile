@@ -1,4 +1,4 @@
-FROM btwiuse/arch
+FROM btwiuse/arch:yay
 
 RUN pacman -Sy --noconfirm expect
 
