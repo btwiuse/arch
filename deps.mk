@@ -9,27 +9,21 @@ bun: node
 cairo: main
 clojure: main
 code-server: yay
-cosmwasm: rust
 curl3: yay
 deno: node
 dev: main
 dkg: golang
 dotnet: main
-elizaos-dev: dev
-elizaos: bun
 foundry: main
 gear: rust
 golang: main
 grafana: main
-ink: rust
 jupyter: main
 k0s: main
 main:
 mathematica-keygen: yay
 mathematica-light: mathematica-keygen
 mathematica: mathematica-keygen
-near: rust
-ninja: rust
 nix: main
 node-20: main
 node-22: main
@@ -44,7 +38,6 @@ rust-goreleaser: rust
 rust-nightly: rustup
 rust: rustup
 rustup: main
-solana: main rustup
 stylus: rust
 swift: main
 tea: main
@@ -78,6 +71,5 @@ wljs: wolframengine
 wolframengine: mathematica-keygen
 xmrig: main
 xpra: yay
-yaourt: main
 yay: main
 zig: main
