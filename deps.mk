@@ -15,7 +15,6 @@ dev: main
 dkg: golang
 dotnet: main
 foundry: main
-gear: rust
 golang: main
 grafana: main
 jupyter: main
