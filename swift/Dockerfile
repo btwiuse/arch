@@ -1,3 +1,6 @@
-FROM btwiuse/arch
+FROM btwiuse/arch:yay
 
-RUN curl -sL https://download.swift.org/swift-5.7.1-release/ubuntu2204/swift-5.7.1-RELEASE/swift-5.7.1-RELEASE-ubuntu22.04.tar.gz | tar --strip-components=1 -C / -xvvz
+RUN runuser -u btwiuse -- bash -lc '\
+    yay -S gcc --noconfirm && \
+    yay -S swift-bin swift-format swiftly --noconfirm && \
+    yay -Sc --noconfirm'

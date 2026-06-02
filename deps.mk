@@ -37,7 +37,7 @@ rust-nightly: rustup
 rust: rustup
 rustup: main
 stylus: rust
-swift: main
+swift: yay
 tea: main
 texlive: main
 tor: main
