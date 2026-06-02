@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch nodejs-lts-gallium yarn npm
+RUN pacman -Syu --noconfirm --overwrite='*' nodejs-lts-gallium yarn npm

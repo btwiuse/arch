@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch zig zls
+RUN pacman -Syu --noconfirm --overwrite='*' zig zls

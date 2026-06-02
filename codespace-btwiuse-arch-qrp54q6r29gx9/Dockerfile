@@ -1,6 +1,6 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch yaourt && yes | pacman -Scc
+RUN pacman -Syu --noconfirm --overwrite='*' yaourt && yes | pacman -Scc
 
 USER btwiuse
 

@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker nodejs-lts-jod yarn npm
+RUN pacman -Syu --noconfirm --overwrite='*' nodejs-lts-jod yarn npm

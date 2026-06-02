@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch texlive
+RUN pacman -Syu --noconfirm --overwrite='*' texlive

@@ -20,4 +20,4 @@ RUN curl -sSfL https://release.solana.com/v1.11.10/install | bash -v
 
 RUN echo PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH" >> ~/.bashrc
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch
+RUN pacman -Syu --noconfirm --overwrite='*'

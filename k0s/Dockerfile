@@ -1,6 +1,6 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch
+RUN pacman -Syu --noconfirm --overwrite='*'
 
 RUN curl -sL https://k0s.io/install.sh | bash
 

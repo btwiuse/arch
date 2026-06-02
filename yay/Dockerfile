@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker yay aria2 && pacman -Scc --noconfirm
+RUN pacman -Syu --noconfirm --overwrite='*' yay aria2 && pacman -Scc --noconfirm

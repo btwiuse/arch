@@ -12,6 +12,6 @@ RUN CGO_ENABLED=0 GOBIN=/usr/local/bin go install ./cmd/ufo
 
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch
+RUN pacman -Syu --noconfirm --overwrite='*'
 
 COPY --from=builder /usr/local/bin/ufo /usr/local/bin/

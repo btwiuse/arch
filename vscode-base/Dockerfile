@@ -10,6 +10,6 @@ COPY --from=bun /usr/bin/bun /usr/bin/bunx /usr/bin/
 
 RUN npx -y n 22
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker gcc libxkbfile unzip wget deno rsync bats quilt github-cli
+RUN pacman -Syu --noconfirm --overwrite='*' gcc libxkbfile unzip wget deno rsync bats quilt github-cli
 
 ENV VSCODE_SKIP_NODE_VERSION_CHECK=true

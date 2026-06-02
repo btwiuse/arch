@@ -1,13 +1,13 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch \
+RUN pacman -Syu --noconfirm --overwrite='*' \
                                             pkgfile \
                                             htop \
                                             python \
                                             go clang tinygo go-tools \
                                             rustup clang cmake \
                                             yarn npm nodejs esbuild deno \
-    && pacman -Scc --noconfirm
+ && pacman -Scc --noconfirm
 
 RUN npm install -g n pnpm bun
 RUN pkgfile -u

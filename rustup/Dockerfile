@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch rustup clang cmake protobuf cargo-binstall
+RUN pacman -Syu --noconfirm --overwrite='*' rustup clang cmake protobuf cargo-binstall

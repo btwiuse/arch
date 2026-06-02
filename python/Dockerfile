@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker neofetch python python-pip
+RUN pacman -Syu --noconfirm --overwrite='*' python python-pip

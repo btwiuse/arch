@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' docker xmrig
+RUN pacman -Syu --noconfirm --overwrite='*' xmrig
