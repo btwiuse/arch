@@ -1,0 +1,15 @@
+sudo pacman -S --noconfirm --needed xpra xorg gnome spectrwm xlockmore xterm xorg-xeyes python-paramiko python-pyinotify wqy-microhei htop firefox guake && yes | pacman -Scc
+yaourt -S --noconfirm --needed xpra-html5-git
+cat <<'EOF' >> ~/.bashrc
+eval `dbus-launch --auto-syntax`
+set -o vi
+EOF
+
+# xpra start-desktop --daemon=no --start=spectrwm --start-child=xeyes --html=/usr/share/xpra/www/usr/share/xpra/www/ --bind-ws=0.0.0.0:8888
+# docker build -t btwiuse/xpra .devcontainer
+
+apk add tmux
+# apk add plasma py3-cairo py3-paramiko xpra gnome xpra-webclient gnome-terminal py3-uinput alacritty firefox xfce4 bash chromium
+apk add py3-cairo py3-paramiko xpra xpra-webclient py3-uinput alacritty xfce4 bash 
+# xpra start-desktop --daemon=no --start=startplasma-x11 --start-child=gnome-terminal --html=on --bind-ws=0.0.0.0:8888
+xpra start-desktop --daemon=no --start=startxfce4 --start-child=alacritty --html=on --bind-ws=0.0.0.0:8888
