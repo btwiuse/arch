@@ -14,12 +14,22 @@ PUSH     ?= 0
 # Every directory that has a Dockerfile is a buildable image.
 BRANCHES := $(patsubst %/Dockerfile,%,$(wildcard */Dockerfile))
 
-.PHONY: all list $(BRANCHES)
+.PHONY: all list deps deps-check $(BRANCHES)
 
 all: $(BRANCHES)
 
 list:
 	@printf '%s\n' $(BRANCHES)
+
+# Regenerate deps.mk from the Dockerfiles' FROM lines.
+deps:
+	./gen-deps.sh > deps.mk
+
+# Fail if deps.mk is stale (use in CI).
+deps-check:
+	@./gen-deps.sh | diff -u deps.mk - \
+	  && echo 'deps.mk is up to date' \
+	  || { echo 'deps.mk is stale: run `make deps`'; exit 1; }
 
 # Generic recipe: build (and optionally push) one image, tagged by branch name.
 # `main` is also the base image btwiuse/arch == :latest.
