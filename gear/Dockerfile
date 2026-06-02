@@ -1,6 +1,6 @@
 FROM btwiuse/arch:rust AS builder
 
-RUN pacman -Syu --noconfirm --needed binaryen yarn npm deno
+RUN pacman -Syu --noconfirm --needed binaryen yarn npm deno && pacman -Scc --noconfirm
 
 RUN npm install --force -g sails-js
 

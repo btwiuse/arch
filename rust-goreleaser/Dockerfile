@@ -2,7 +2,7 @@ FROM goreleaser/goreleaser AS goreleaser
 
 FROM btwiuse/arch:rust
 
-RUN pacman -Syu --noconfirm --overwrite='*' zig zls
+RUN pacman -Syu --noconfirm --overwrite='*' zig zls && pacman -Scc --noconfirm
 
 RUN cargo binstall -y cargo-zigbuild --install-path /usr/bin
 

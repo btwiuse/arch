@@ -1,6 +1,6 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' asdf-vm nodejs yarn npm unzip
+RUN pacman -Syu --noconfirm --overwrite='*' asdf-vm nodejs yarn npm unzip && pacman -Scc --noconfirm
 RUN npm i -g bun
 
 RUN asdf plugin add scarb

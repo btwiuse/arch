@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' nix
+RUN pacman -Syu --noconfirm --overwrite='*' nix && pacman -Scc --noconfirm

@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' apk-tools
+RUN pacman -Syu --noconfirm --overwrite='*' apk-tools && pacman -Scc --noconfirm

@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' zig zls
+RUN pacman -Syu --noconfirm --overwrite='*' zig zls && pacman -Scc --noconfirm

@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' prometheus
+RUN pacman -Syu --noconfirm --overwrite='*' prometheus && pacman -Scc --noconfirm

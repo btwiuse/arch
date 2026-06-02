@@ -1,3 +1,3 @@
 FROM btwiuse/arch
 
-RUN pacman -Syu --noconfirm --overwrite='*' nodejs yarn npm
+RUN pacman -Syu --noconfirm --overwrite='*' nodejs yarn npm && pacman -Scc --noconfirm
