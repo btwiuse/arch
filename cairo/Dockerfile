@@ -11,9 +11,7 @@ RUN asdf plugin add starknet-foundry
 RUN asdf install starknet-foundry latest
 RUN asdf set -u starknet-foundry latest
 
-RUN asdf plugin add starknet-devnet
-RUN asdf install starknet-devnet latest
-RUN asdf set -u starknet-devnet latest
+RUN curl -sL https://github.com/starknet-io/starknet-devnet/releases/download/v0.8.1/starknet-devnet-x86_64-unknown-linux-gnu.tar.gz | tar -xvzC /usr/local/bin/
 
 RUN curl -L https://github.com/starkware-libs/cairo/releases/download/v2.14.1-dev.0/release-x86_64-unknown-linux-musl.tar.gz | tar -xzC /
 
