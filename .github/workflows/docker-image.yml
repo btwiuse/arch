@@ -1,5 +1,12 @@
 name: Docker image
 
+# Show the target in the run list instead of a generic "Docker image #N".
+# Manual runs => the chosen target; pushes => the commit that triggered them.
+run-name: >-
+  ${{ github.event_name == 'workflow_dispatch'
+      && format('Build {0}', github.event.inputs.target)
+      || format('Build (push) {0}', github.event.head_commit.message) }}
+
 # All images now live on the main branch as ./<name>/Dockerfile, and their
 # build-order dependencies are declared in deps.mk (consumed by the Makefile).
 # Adding a new image == adding a new ./<name>/Dockerfile (+ an edge in deps.mk);
