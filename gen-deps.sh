@@ -17,11 +17,15 @@ cd "$(dirname "$0")"
 
   for df in */Dockerfile; do
     img=${df%/Dockerfile}
-    # Collect parent tags from all FROM lines.
-    parents=$(grep -iE '^[[:space:]]*FROM[[:space:]]+btwiuse/arch' "$df" \
-      | sed -E 's#^[[:space:]]*[Ff][Rr][Oo][Mm][[:space:]]+btwiuse/arch##' \
-      | sed -E 's#^:([A-Za-z0-9._-]+).*#\1#; t; s#.*#main#' \
-      | sort -u)
+    # Extract parent image from each `FROM btwiuse/arch[:<parent>]` line:
+    #   FROM btwiuse/arch:rust AS x  -> rust
+    #   FROM btwiuse/arch            -> main   (untagged == :latest)
+    # awk is used instead of sed for portability (BSD/macOS vs GNU).
+    parents=$(awk '
+      tolower($1) == "from" && $2 ~ /^btwiuse\/arch(:|$)/ {
+        n = index($2, ":")
+        print (n ? substr($2, n + 1) : "main")
+      }' "$df" | sort -u)
     # `main` is the root: depends on nothing.
     if [ "$img" = main ]; then parents=; fi
     # Drop self-references just in case.
