@@ -1,6 +1,8 @@
-# btwiuse/arch:<branch> docker image build dependencies
-# Derived from each branch's .devcontainer/Dockerfile FROM lines.
+# btwiuse/arch:<branch> docker image build dependencies.
+# Each edge `child: parent` is derived from the FROM btwiuse/arch:<parent>
+# lines in ./<child>/Dockerfile (including builder stages).
 # `main` is the root base image (FROM btwiuse/arch == latest).
+# Consumed by the Makefile to order builds; edges only, no recipes.
 
 main:
 
