@@ -12,7 +12,7 @@ code-server: main
 codespace-btwiuse-arch-qrp54q6r29gx9: main
 cosmwasm: rust
 curl3: yay
-deno: main
+deno: node
 dev: main
 dkg: golang
 dotnet: main
