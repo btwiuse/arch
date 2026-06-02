@@ -1,35 +1,64 @@
 name: Docker image
 
+# All images now live on the main branch as ./<name>/Dockerfile, and their
+# build-order dependencies are declared in deps.mk (consumed by the Makefile).
+# Adding a new image == adding a new ./<name>/Dockerfile (+ an edge in deps.mk);
+# this workflow needs no changes for new images.
+
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: "Image dir to build, or 'all'. Empty = same as 'all'."
+        required: false
+        default: "all"
   push:
 
 jobs:
   docker-image:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2   # need the previous commit to diff changed dirs
 
-    - run: docker build -f .devcontainer/Dockerfile -t btwiuse/arch:${{ github.sha }} .
-      name: docker build
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # Decide what to build:
+      #   - manual run  -> the chosen input (default: all)
+      #   - push        -> only the image dirs whose files changed in this push
+      #                    (deps.mk makes `make` build their parents first)
+      # Shared infra changes (Makefile/deps.mk/workflow) rebuild everything.
+      - name: Select targets
+        id: sel
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUT: ${{ github.event.inputs.target }}
+        run: |
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            echo "targets=${INPUT:-all}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          changed=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" 2>/dev/null || git diff --name-only HEAD~1 HEAD)
+          if echo "$changed" | grep -qE '^(Makefile|deps\.mk|\.github/)'; then
+            echo "targets=all" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # top-level dirs that have a Dockerfile and changed in this push
+          targets=$(echo "$changed" \
+            | grep -E '^[^/]+/' \
+            | cut -d/ -f1 \
+            | sort -u \
+            | while read d; do [ -f "$d/Dockerfile" ] && echo "$d"; done \
+            | tr '\n' ' ')
+          echo "targets=${targets:-}" >> "$GITHUB_OUTPUT"
 
-  # - run: docker push btwiuse/arch:${{ github.sha }}
-  #   name: docker push
-
-  # - run: |
-  #     docker tag btwiuse/arch:${{ github.sha }} btwiuse/arch
-  #     docker push btwiuse/arch
-  #   if: github.ref == 'refs/heads/main'
-  #   name: docker push latest
-
-    - run: |
-        docker tag btwiuse/arch:${{ github.sha }} btwiuse/arch:${{ github.ref_name }}
-        docker push btwiuse/arch:${{ github.ref_name }}
-      name: docker push branch
+      - name: docker build & push
+        if: steps.sel.outputs.targets != ''
+        run: |
+          echo "Building: ${{ steps.sel.outputs.targets }}"
+          make -j1 PUSH=1 ${{ steps.sel.outputs.targets }}
