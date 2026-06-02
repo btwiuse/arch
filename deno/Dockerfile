@@ -1,4 +1,5 @@
-FROM btwiuse/arch
+FROM btwiuse/arch:node
 
-RUN pacman -Syu --noconfirm --overwrite='*' deno && pacman -Scc --noconfirm
-RUN deno upgrade
+RUN pacman -Syu --noconfirm --overwrite='*' unzip && pacman -Scc --noconfirm
+
+RUN npm i -g deno bun
