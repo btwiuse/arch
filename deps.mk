@@ -32,8 +32,6 @@ mathematica: mathematica-keygen
 near: rust
 ninja: rust
 nix: main
-node-16: main
-node-18: main
 node-20: main
 node-22: main
 node-24: main
