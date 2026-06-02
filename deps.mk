@@ -46,25 +46,6 @@ tor: main
 ufo: golang main
 uupdump: main
 v2ray: main
-vscode-base: bun node-22
-vscode-dev: vscode-src
-vscode-linux-x64-ci: vscode-src
-vscode-linux-x64: vscode-src
-vscode-reh-linux-x64-ci: vscode-src
-vscode-reh-linux-x64: vscode-src
-vscode-reh-web-linux-arm64-ci: vscode-src
-vscode-reh-web-linux-arm64: vscode-src
-vscode-reh-web-linux-x64-ci: vscode-src
-vscode-reh-web-linux-x64-marketplace: vscode-src
-vscode-reh-web-linux-x64-open-vsx: vscode-src
-vscode-reh-web-linux-x64: vscode-src
-vscode-src-codespace: vscode-base
-vscode-src: vscode-base
-vscode-web-ci: vscode-src
-vscode-web-min: vscode-src
-vscode-web-only: vscode-src
-vscode-web: vscode-src
-vscode: vscode-src
 whois: main
 windmill: main
 wljs: wolframengine
