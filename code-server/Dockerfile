@@ -1,6 +1,4 @@
-FROM btwiuse/arch
-
-RUN pacman -Syu --noconfirm --overwrite='*' yay aria2 && pacman -Scc --noconfirm
+FROM btwiuse/arch:yay
 
 RUN su btwiuse -c "yay -S visual-studio-code-bin --noconfirm"
 
