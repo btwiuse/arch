@@ -8,8 +8,7 @@ bazel: main
 bun: node
 cairo: main
 clojure: main
-code-server: main
-codespace-btwiuse-arch-qrp54q6r29gx9: main
+code-server: yay
 cosmwasm: rust
 curl3: yay
 deno: node
@@ -36,7 +35,7 @@ node-20: main
 node-22: main
 node-24: main
 node: main
-powershell: main
+powershell: yay
 prometheus: main
 python: main
 qemu: main
@@ -78,6 +77,7 @@ windmill: main
 wljs: wolframengine
 wolframengine: mathematica-keygen
 xmrig: main
+xpra: yay
 yaourt: main
 yay: main
 zig: main
