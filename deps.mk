@@ -8,7 +8,6 @@ bazel: main
 bun: node
 cairo: main
 clojure: main
-code-server: yay
 curl3: yay
 deno: node
 dev: main
