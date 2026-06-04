@@ -36,6 +36,7 @@ rust-goreleaser: rust
 rust-nightly: rustup
 rust: rustup
 rustup: main
+sshd: main
 stylus: rust
 swift: yay
 tea: main
