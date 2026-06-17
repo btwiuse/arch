@@ -41,6 +41,7 @@ stylus: rust
 swift: yay
 tea: main
 texlive: main
+tinygo: main
 tor: main
 ufo: golang main
 uupdump: main
