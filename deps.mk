@@ -15,6 +15,7 @@ dkg: golang
 dotnet: main
 foundry: main
 ghidra: yay
+go4js: golang
 golang: main
 gopherjs: golang
 grafana: main
