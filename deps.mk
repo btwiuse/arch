@@ -16,6 +16,7 @@ dotnet: main
 foundry: main
 ghidra: yay
 golang: main
+gopherjs: golang
 grafana: main
 jupyter: main
 k0s: main
